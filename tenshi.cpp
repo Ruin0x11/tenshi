@@ -8,9 +8,10 @@
 #include "hsp/hsp3plugin.h"
 #include "hsp/hspvar_core.h"
 #include "commands.h"
+#include "functions.h"
 #include "exec.h"
 #include "regfunc.h"
-#include "getarg.h"
+#include "getsetarg.h"
 #include <cstdlib>
 
  /*------------------------------------------------------------*/
@@ -55,13 +56,17 @@ static void *reffunc( int *type_res, int cmd )
 	code_next();
 
 	switch( cmd ) {							// サブコマンドごとの分岐
-	    case 0x80: *type_res = tenshi_func::tenshi_load_module();       break;
-		case 0x81: *type_res = tenshi_func::tenshi_exec_function();     break;
-		case 0x82: *type_res = tenshi_func::tenshi_register_function(); break;
-		case 0x83: *type_res = tenshi_func::tenshi_getarg_string();     break;
-		case 0x84: *type_res = tenshi_func::tenshi_getarg_int();        break;
-		case 0x85: *type_res = tenshi_func::tenshi_getarg_double();     break;
-		default: puterror( HSPERR_UNSUPPORTED_FUNCTION );               break;
+	    case 0x80: *type_res = tenshi_func::tenshi_load_module();           break;
+		case 0x81: *type_res = tenshi_func::tenshi_exec_function();         break;
+		case 0x82: *type_res = tenshi_func::tenshi_register_function();     break;
+		case 0x83: *type_res = tenshi_func::tenshi_getarg_string();         break;
+		case 0x84: *type_res = tenshi_func::tenshi_getarg_int();            break;
+		case 0x85: *type_res = tenshi_func::tenshi_getarg_double();         break;
+		case 0x86: *type_res = tenshi_func::tenshi_setret_string();         break;
+		case 0x87: *type_res = tenshi_func::tenshi_setret_int();            break;
+		case 0x88: *type_res = tenshi_func::tenshi_setret_double();         break;
+		case 0x89: *type_res = tenshi_func::tenshi_set_default_namespace(); break;
+		default: puterror( HSPERR_UNSUPPORTED_FUNCTION );                   break;
 	}
 
 	//			'('で終わるかを調べる

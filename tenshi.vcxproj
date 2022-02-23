@@ -84,7 +84,8 @@
   <ItemGroup>
     <ClCompile Include="commands.cpp" />
     <ClCompile Include="exec.cpp" />
-    <ClCompile Include="getarg.cpp" />
+    <ClCompile Include="functions.cpp" />
+    <ClCompile Include="getsetarg.cpp" />
     <ClCompile Include="getsetvar.cpp" />
     <ClCompile Include="regfunc.cpp" />
     <ClCompile Include="sdk\add_on\scriptany\scriptany.cpp" />
@@ -98,7 +99,8 @@
   <ItemGroup>
     <ClInclude Include="commands.h" />
     <ClInclude Include="exec.h" />
-    <ClInclude Include="getarg.h" />
+    <ClInclude Include="functions.h" />
+    <ClInclude Include="getsetarg.h" />
     <ClInclude Include="getsetvar.h" />
     <ClInclude Include="regfunc.h" />
     <ClInclude Include="sdk\add_on\scriptany\scriptany.h" />

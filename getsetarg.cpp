@@ -1,4 +1,4 @@
-#include "getarg.h"
+#include "getsetarg.h"
 #include "tenshi.h"
 #include "regfunc.h"
 #include "hsp/hsp3plugin.h"
@@ -29,6 +29,26 @@ int tenshi_func::tenshi_getarg_int() {
 
 int tenshi_func::tenshi_getarg_double() {
 	if (curGen == NULL) throw HSPERR_ILLEGAL_FUNCTION;
-	ref_val.dval = curGen->GetArgDouble(exinfo->HspFunc_prm_geti());
+	ref_val.ival = curGen->GetArgDouble(exinfo->HspFunc_prm_getd());
+	return HSPVAR_FLAG_DOUBLE;
+}
+
+int tenshi_func::tenshi_setret_string() {
+	if (curGen == NULL) throw HSPERR_ILLEGAL_FUNCTION;
+	std::string* s = reinterpret_cast<std::string*>(curGen->GetAddressOfReturnLocation());
+	*s = exinfo->HspFunc_prm_gets();
+	ref_val.ival = true;
+	return HSPVAR_FLAG_STR;
+}
+
+int tenshi_func::tenshi_setret_int() {
+	if (curGen == NULL) throw HSPERR_ILLEGAL_FUNCTION;
+	ref_val.ival = curGen->SetReturnDWord(exinfo->HspFunc_prm_geti());
 	return HSPVAR_FLAG_INT;
+}
+
+int tenshi_func::tenshi_setret_double() {
+	if (curGen == NULL) throw HSPERR_ILLEGAL_FUNCTION;
+	ref_val.dval = curGen->SetReturnDouble(exinfo->HspFunc_prm_getd());
+	return HSPVAR_FLAG_DOUBLE;
 }

@@ -28,6 +28,25 @@ void message_handler(const asSMessageInfo* msg, void* param) {
 	}
 }
 
+void translate_exception(asIScriptContext* ctx, void* userParam)
+{
+	try
+	{
+		// Rethrow the original exception so we can catch it again
+		throw;
+	}
+	catch (std::exception& e)
+	{
+		// Tell the VM the type of exception that occurred
+		ctx->SetException(e.what());
+	}
+	catch (...)
+	{
+		// The callback must not allow any exception to be thrown, but it is not necessary 
+		// to explicitly set an exception string if the default exception string is sufficient
+	}
+}
+
 // Print the script string to the standard output stream
 void print(std::string& msg) {
 	printf("%s", msg.c_str());
@@ -39,6 +58,7 @@ void tenshi_cmd::tenshi_init() {
 
 	// Set the message callback to receive information on errors in human readable form.
 	int r = engine->SetMessageCallback(asFUNCTION(message_handler), 0, asCALL_CDECL); assert(r >= 0);
+	r = engine->SetTranslateAppExceptionCallback(asFUNCTION(translate_exception), 0, asCALL_CDECL); assert(r >= 0);
 
 	// AngelScript doesn't have a built-in string type, as there is no definite standard 
 	// string type for C++ applications. Every developer is free to register its own string type.
@@ -48,14 +68,15 @@ void tenshi_cmd::tenshi_init() {
 
 	RegisterScriptAny(engine);
 
+	r = engine->SetDefaultNamespace("tenshi"); assert(r >= 0);
+
 	// Register the function that we want the scripts to call 
 	r = engine->RegisterGlobalFunction("void print(const string &in)", asFUNCTION(print), asCALL_CDECL); assert(r >= 0);
 
-	r = engine->RegisterGlobalFunction("any @func_wrapper(int)", asFUNCTION(tenshi_reg::func_wrapper), asCALL_GENERIC); assert(r >= 0);
-	r = engine->RegisterGlobalFunction("bool tenshi_getvar(const string &in, ?&out)", asFUNCTION(tenshi_reg::tenshi_getvar), asCALL_GENERIC); assert(r >= 0);
-	r = engine->RegisterGlobalFunction("void tenshi_setvar(const string &in, const string &in)", asFUNCTION(tenshi_reg::tenshi_setvar_string), asCALL_GENERIC); assert(r >= 0);
-	r = engine->RegisterGlobalFunction("void tenshi_setvar(const string &in, int)", asFUNCTION(tenshi_reg::tenshi_setvar_int), asCALL_GENERIC); assert(r >= 0);
-	r = engine->RegisterGlobalFunction("void tenshi_setvar(const string &in, double)", asFUNCTION(tenshi_reg::tenshi_setvar_double), asCALL_GENERIC); assert(r >= 0);
+	r = engine->RegisterGlobalFunction("bool getvar(const string &in, ?&out)", asFUNCTION(tenshi_reg::tenshi_getvar), asCALL_GENERIC); assert(r >= 0);
+	r = engine->RegisterGlobalFunction("void setvar(const string &in, const string &in)", asFUNCTION(tenshi_reg::tenshi_setvar_string), asCALL_GENERIC); assert(r >= 0);
+	r = engine->RegisterGlobalFunction("void setvar(const string &in, int)", asFUNCTION(tenshi_reg::tenshi_setvar_int), asCALL_GENERIC); assert(r >= 0);
+	r = engine->RegisterGlobalFunction("void setvar(const string &in, double)", asFUNCTION(tenshi_reg::tenshi_setvar_double), asCALL_GENERIC); assert(r >= 0);
 }
 
 void tenshi_cmd::tenshi_set_message_handler() {

@@ -1,19 +1,19 @@
 #include "tenshi.as"
 #cmpopt varname 1
 
-c = 42
-b = "dood"
-s = "Asd"
+goto *init
 
-tenshi_init
-a = tenshi_register_function("void hsp_logmes(const string &in)", *hsp_logmes)
-a = tenshi_register_function("void hsp_dialog(const string &in)", *hsp_dialog)
-logmes "" + a
-tenshi_set_message_handler "void hsp_dialog(const string &in)"
-a = tenshi_load_module("test", "test.as")
-logmes "" + a
-a = tenshi_exec_function("test", "void main()")
-logmes "" + a
+#include "tenshi.hsp"
+
+*init
+	c = 42
+	b = "dood"
+	s = "Asd"
+	
+	tenshi_init
+	tenshih_openlib_hsp
+	a = tenshi_load_module("test", "test.as")
+	a = tenshi_exec_function("test", "void main()")
 
 	randomize
 	screen 0,320,240,0
@@ -40,14 +40,4 @@ logmes "" + a
 	goto *main
 
 	stop
-
-*hsp_logmes
-	s = tenshi_getarg_string(0)
-	logmes s
-	return
-
-*hsp_dialog
-	s = tenshi_getarg_string(0)
-	dialog s
-	return
 

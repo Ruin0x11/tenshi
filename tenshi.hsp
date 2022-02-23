@@ -1,0 +1,128 @@
+#deffunc tenshih_openlib_hsp
+    a = tenshi_set_default_namespace("hsp")
+ 
+ 	// HSPシステム制御命令
+	a = tenshi_register_function("void logmes(const string &in)", *tenshih_f_logmes)
+ 
+    // ファイル操作命令
+	a = tenshi_register_function("void bcopy(const string &in, const string &in)", *tenshih_f_bcopy)
+
+	// プログラム制御命令
+	a = tenshi_register_function("void await(int)", *tenshih_f_await)
+	a = tenshi_register_function("void wait(int)", *tenshih_f_wait)
+
+	// 基本入出力制御命令
+	a = tenshi_register_function("int getkey(int)", *tenshih_f_getkey)
+	a = tenshi_register_function("void randomize(int = 0)", *tenshih_f_randomize)
+	a = tenshi_register_function("int stick(int = 0, int = 0)", *tenshih_f_stick)
+	
+	// 基本入出力関数
+	a = tenshi_register_function("int ginfo(int)", *tenshih_f_ginfo)
+	a = tenshi_register_function("int rnd(int)", *tenshih_f_rnd)
+	a = tenshi_register_function("int sysinfo(int)", *tenshih_f_sysinfo)
+
+	// 文字列操作命令
+	a = tenshi_register_function("void noteadd(string, int = -1, int = 0)", *tenshih_f_noteadd)
+	a = tenshi_register_function("void notedel(int)", *tenshih_f_notedel)
+	a = tenshi_register_function("void noteget(int = 0)", *tenshih_f_noteget)
+
+	// 画面制御命令
+	a = tenshi_register_function("void dialog(const string &in)", *tenshih_f_dialog)
+
+	;tenshi_set_message_handler "void logmes(const string &in)"
+	tenshi_set_message_handler "void dialog(const string &in)"
+
+	return
+
+/*
+ *  HSPシステム制御命令
+ */
+ 	
+*tenshih_f_logmes
+	logmes tenshi_getarg_string(0)
+	return	
+ 	
+/*
+ *  ファイル操作命令
+ */
+
+*tenshih_f_bcopy
+	bcopy tenshi_getarg_string(0), tenshi_getarg_string(1)
+	return
+
+/*
+ *  プログラム制御命令
+ */
+	
+*tenshih_f_await
+	await tenshi_getarg_int(0)
+	return	
+	
+*tenshih_f_wait
+	wait tenshi_getarg_int(0)
+	return	
+
+/*
+ *  基本入出力制御命令
+ */
+
+*tenshih_f_getkey
+	i@tenshi = 0
+	getkey i@tenshi, tenshi_getarg_int(0)
+	stat@tenshi = tenshi_setret_int(i@tenshi)
+	return
+
+*tenshih_f_stick
+	i@tenshi = 0
+	stick i@tenshi, tenshi_getarg_int(0), tenshi_getarg_int(1)
+	stat@tenshi = tenshi_setret_int(i@tenshi)
+	return
+
+*tenshih_f_randomize
+	randomize(tenshi_getarg_int(0))
+	return
+	
+/*
+ *  基本入出力関数
+ */
+
+*tenshih_f_ginfo
+	reti@tenshi = ginfo(tenshi_getarg_int(0))
+	stat@tenshi = tenshi_setret_int(reti@tenshi)
+	return
+
+*tenshih_f_rnd
+	reti@tenshi = rnd(tenshi_getarg_int(0))
+	stat@tenshi = tenshi_setret_int(reti@tenshi)
+	return
+
+*tenshih_f_sysinfo
+	reti@tenshi = sysinfo(tenshi_getarg_int(0))
+	stat@tenshi = tenshi_setret_int(reti@tenshi)
+	return
+	
+/*
+ *  基本入出力関数
+ */
+
+*tenshih_f_noteadd
+	noteadd tenshi_getarg_string(0), tenshi_getarg_int(1), tenshi_getarg_int(2)
+	return
+	
+*tenshih_f_notedel
+	notedel tenshi_getarg_int(0)
+	return
+	
+*tenshih_f_noteget
+	rets@tenshi = ""
+	noteget rets@tenshi, tenshi_getarg_int(0)
+	stat@tenshi = tenshi_setret_string(rets@tenshi)
+	return
+
+/*
+ *  画面制御命令
+ */
+
+*tenshih_f_dialog
+	dialog tenshi_getarg_string(0)
+	return
